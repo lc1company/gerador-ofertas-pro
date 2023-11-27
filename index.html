@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Tabloides</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Regular+Brush+Regular">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #fff73c;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: auto;
+            max-width: 780px;
+        }
+
+        @font-face {
+            font-family: 'Regular Brush Regular';
+            src: url('Regular Brush Regular.woff') format('woff');
+        }
+
+        #banner {
+            position: relative;
+            width: 100%;
+            height: auto;
+            min-height: 75%;
+            background-color: #ff0000;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        #banner img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        p {
+            font-family: 'Regular Brush Regular';
+            font-size: 50px;
+        }
+
+        #caminhoOutrolugar {
+            position: relative;
+            justify-content: center;
+            min-height: 75%;
+            height: auto;
+            max-width: 80%;
+            min-width: 75%;
+            font-family: 'Regular Brush Regular';
+            font-size: 20px;
+            color: #f0000f;
+            object-fit: cover;
+            width: auto;
+            background-color: #ffffff;
+            text-align: center;
+            border-radius: 30px;
+            margin-top: 0;
+            margin-bottom: 0;
+            align-items: center;
+            margin: 100px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .nome-produto {
+            position: relative;
+            font-family: 'Regular Brush Regular';
+            font-size: 35px;
+            color: #000000;
+            margin-top: -10px;
+            margin-bottom: 1%;
+        }
+
+        .unidade-produto {
+            font-family: 'Regular Brush Regular';
+            font-size: 25px;
+            color: #000000;
+            margin-left: 55%;
+        }
+
+        .preco-produto {
+            font-family: 'Regular Brush Regular';
+            font-size: 30px;
+            color: #f0000f;
+            margin-top: 0;
+            margin-bottom: 0;
+            text-align: center
+        }
+
+        .titulo-produto {
+            position: relative;
+            font-family: 'Regular Brush Regular';
+            font-size: 30px;
+            color: #f0000f;
+            margin-top: 0;
+            margin-bottom: 5%;
+            text-align: center
+        }
+
+        #uploadBtn {
+            display: none;
+        }
+
+        #customBtn {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #imagePreview {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            margin-bottom: 0;
+            margin-top: 0;
+            max-height: 50%;
+            max-width: 45%;
+            z-index: 1;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .texto-margem {
+            font-family: 'Regular Brush Regular';
+            font-size: 30px;
+            color: #ff0000;
+        }
+
+        .texto-banner {
+            font-family: 'Regular Brush Regular';
+            font-size: 25px;
+            background-color: #fff73c;
+            color: #f0000f;
+            border-radius: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <p>Editor De Ofertas</p>
+
+<div id="banner">
+    <p class="texto-margem">.</p>
+    <div id="caminhoOutrolugar">
+        <p class="texto-banner" contenteditable="true" spellcheck="false">Nome supermecado</p>
+        <p class="titulo-produto" contenteditable="true" spellcheck="false">Oferta do Dia</p>
+        <p class="nome-produto" contenteditable="true" spellcheck="false">Nome do Produto</p>
+        <img id="imagePreview">
+        <p class="preco-produto" contenteditable="true" spellcheck="false">R$ 1,00</p>
+        <p class="unidade-produto" contenteditable="true" spellcheck="false">Unidade</p>
+        <p class="texto-banner" contenteditable="true" spellcheck="false">Oferta Válida Até...</p>
+    </div>
+    <P class="texto-margem">.</P>
+</div>
+
+    <button onclick="baixarImagem()" style="background-color:#0000ff; font-size: 20px; margin-top: 20px;">Salvar Oferta</button>
+    <button id="customBtn" onclick="uploadFile()">Escolher Imagem</button>
+
+    <!-- Input do tipo "file" oculto -->
+    <input type="file" id="uploadBtn" style="display:none" onchange="previewImage(this)">
+
+      <!-- Preview da imagem selecionada -->
+    <img id="imagePreview" src="#" alt="Imagem Preview" style="max-width: 100%; max-height: 300px; display:none">
+
+    <script>
+
+        window.uploadFile = function() {
+            document.getElementById('uploadBtn').click();
+        }
+
+        window.previewImage = function(input) {
+            const preview = document.getElementById('imagePreview');
+            const file = input.files[0];
+
+          if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        };
+
+          reader.readAsDataURL(file);
+          }
+        }
+
+        window.baixarImagem = function() {
+            const banner = document.getElementById('banner');
+            const produtoSalvo = document.getElementById('produto-salvo');
+
+            html2canvas(banner, {
+                useCORS: true,
+                logging: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL();
+                link.download = 'imagem.png';
+                link.click();
+            });
+        }
+    </script>
+</body>
+</html>
